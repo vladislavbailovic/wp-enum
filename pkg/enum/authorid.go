@@ -5,18 +5,24 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"sync"
 
 	"wp-enum/pkg/data"
 	wp_http "wp-enum/pkg/http"
 )
 
-func generateUrls(base string, start, end int) []string {
-	urls := make([]string, end-start)
+type authorReq struct {
+	url string
+	id  int
+}
+
+func makeRequests(base string, start, end int) []authorReq {
+	urls := make([]authorReq, end-start)
 
 	count := 0
 	for idx := start; idx < end; idx++ {
 		url := fmt.Sprintf("%s?author=%d", base, idx)
-		urls[count] = url
+		urls[count] = authorReq{url, idx}
 		count++
 	}
 
@@ -27,7 +33,7 @@ func isRedirect(resp http.Response) bool {
 	return resp.StatusCode > 300 && resp.StatusCode < 399
 }
 
-func getAuthorFromRedirect(author_url string, resp http.Response) (string, error) {
+func getAuthorFromResponse(author_url string, resp http.Response) (string, error) {
 	if !isRedirect(resp) {
 		return "", errors.New("not a redirect")
 	}
@@ -43,38 +49,76 @@ func getAuthorFromRedirect(author_url string, resp http.Response) (string, error
 	return strings.Replace(rawUser, "/", "", -1), nil
 }
 
-func getUserDataFromUrls(urlList []string, client wp_http.Client) ([]data.ApiResponse, error) {
+func getAuthor(author_url string, client wp_http.Client) (string, error) {
+	resp := client.Send(author_url)
+
+	user, err := getAuthorFromResponse(author_url, resp)
+	if err != nil {
+		return "", err
+	}
+
+	return user, nil
+}
+
+func getAuthorsFromBatch(requestList []authorReq, client wp_http.Client) []data.ApiResponse {
 	result := []data.ApiResponse{}
-	var overallErr error
+	var wg sync.WaitGroup
+	var mu sync.Mutex
 
-	for idx, author_url := range urlList {
-		resp := client.Send(author_url)
-		if !isRedirect(resp) {
-			continue
+	wg.Add(len(requestList))
+
+	for _, author := range requestList {
+		go func(author authorReq, client wp_http.Client) {
+			defer wg.Done()
+			user, err := getAuthor(author.url, client)
+			if err != nil {
+				return
+			}
+
+			if "" != user {
+				mu.Lock()
+				result = append(result, data.ApiResponse{user, author.id})
+				mu.Unlock()
+			}
+		}(author, client)
+	}
+
+	wg.Wait()
+
+	return result
+}
+
+func getAllAuthors(requestList []authorReq, client wp_http.Client) ([]data.ApiResponse, error) {
+	results := []data.ApiResponse{}
+
+	batch := []authorReq{}
+	count := 0
+	for _, url := range requestList {
+		count++
+		if count > 5 {
+			for _, author := range getAuthorsFromBatch(batch, client) {
+				results = append(results, author)
+			}
+			count = 0
+			batch = []authorReq{}
 		}
+		batch = append(batch, url)
+	}
 
-		user, err := getAuthorFromRedirect(author_url, resp)
-		if err != nil {
-			overallErr = err
-			continue
-		}
-
-		if "" != user {
-			result = append(result, data.ApiResponse{user, idx})
+	if len(batch) > 0 {
+		for _, author := range getAuthorsFromBatch(batch, client) {
+			results = append(results, author)
 		}
 	}
 
-	if overallErr != nil && len(result) == 0 {
-		return nil, overallErr
-	}
-	return result, nil
+	return results, nil
 }
 
 func enumerateAuthorId(url string) func(wp_http.Client, data.Constraints) ([]data.ApiResponse, error) {
 	url = wp_http.NormalizeRootUrl(url)
 
 	return func(client wp_http.Client, opts data.Constraints) ([]data.ApiResponse, error) {
-		urlList := generateUrls(url, opts.Start, opts.End)
-		return getUserDataFromUrls(urlList, client)
+		requestList := makeRequests(url, opts.Start, opts.End)
+		return getAllAuthors(requestList, client)
 	}
 }
