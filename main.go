@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"wp-enum/pkg/cli"
+	"wp-enum/pkg/data"
 	"wp-enum/pkg/enum"
 	wp_http "wp-enum/pkg/http"
 )
@@ -13,7 +14,7 @@ func main() {
 		panic("URL required")
 	}
 
-	kind := enum.EnumerationType(params.Kind)
+	kind := data.EnumerationType(params.Kind)
 
 	client := wp_http.NewHttpClient(wp_http.CLIENT_WEB)
 	enumeration, err := enum.Enumerate(kind, params.URL)

@@ -7,11 +7,12 @@ import (
 	"net/http"
 	"testing"
 	"time"
+	"wp-enum/pkg/data"
 )
 
 func TestEnumerateReturnsErrorWithInvalidEnumType(t *testing.T) {
 	for i := 10; i < 15; i++ {
-		res, err := Enumerate(EnumerationType(i), "test.com")
+		res, err := Enumerate(data.EnumerationType(i), "test.com")
 		if res != nil {
 			t.Fatalf("expected nil result for invalid enumeration type: %d", i)
 		}
