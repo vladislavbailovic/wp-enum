@@ -10,8 +10,7 @@ import (
 	wp_http "wp-enum/pkg/http"
 )
 
-func getJson(apiUrl string) ([]apiResponse, error) {
-	client := wp_http.NewHttpClient(wp_http.CLIENT_WEB)
+func getJson(apiUrl string, client wp_http.Client) ([]apiResponse, error) {
 	req, err := http.NewRequest("GET", apiUrl, nil)
 	if err != nil {
 		return nil, err
@@ -36,9 +35,9 @@ func getJson(apiUrl string) ([]apiResponse, error) {
 	return tmp, nil
 }
 
-func getJsonUsers(apiUrl string) (map[string]int, error) {
+func getJsonUsers(apiUrl string, client wp_http.Client) (map[string]int, error) {
 	result := make(map[string]int)
-	json, err := getJson(apiUrl)
+	json, err := getJson(apiUrl, client)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +47,9 @@ func getJsonUsers(apiUrl string) (map[string]int, error) {
 	return result, nil
 }
 
-func enumerateJsonApi(url string) (map[string]int, error) {
+func enumerateJsonApi(url string) func(wp_http.Client, ...int) (map[string]int, error) {
 	apiUrl := fmt.Sprintf("%swp-json/wp/v2/users", url)
-	return getJsonUsers(apiUrl)
+	return func(client wp_http.Client, limit ...int) (map[string]int, error) {
+		return getJsonUsers(apiUrl, client)
+	}
 }

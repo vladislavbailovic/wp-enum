@@ -1,9 +1,13 @@
 package enum
 
-import "testing"
+import (
+	"testing"
+	wp_http "wp-enum/pkg/http"
+)
 
 func TestEnumerateJsonApi(t *testing.T) {
-	res, err := enumerateJsonApi("http://multiwp.test/calendar/")
+	client := wp_http.NewHttpClient(wp_http.CLIENT_PASSTHROUGH)
+	res, err := enumerateJsonApi("http://multiwp.test/calendar/")(client)
 	if err != nil {
 		t.Log(err)
 		t.Fatalf("expected error to be nil")

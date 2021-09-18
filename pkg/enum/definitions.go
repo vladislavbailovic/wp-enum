@@ -3,6 +3,8 @@ package enum
 import (
 	"errors"
 	"fmt"
+
+	wp_http "wp-enum/pkg/http"
 )
 
 type EnumerationType int
@@ -18,15 +20,15 @@ type apiResponse struct {
 	Id   int    `json:"id"`
 }
 
-func Enumerate(kind EnumerationType, url string) (map[string]int, error) {
+func Enumerate(kind EnumerationType, url string) (func(wp_http.Client, ...int) (map[string]int, error), error) {
 	if TYPE_JSON_API == kind {
-		return enumerateJsonApi(url)
+		return enumerateJsonApi(url), nil
 	}
 	if TYPE_JSON_ROUTE == kind {
-		return enumerateJsonRoute(url)
+		return enumerateJsonRoute(url), nil
 	}
 	if TYPE_AUTHOR_ID == kind {
-		return enumerateAuthorId(url)
+		return enumerateAuthorId(url), nil
 	}
 	return nil, errors.New(fmt.Sprintf("Unknown enumeration type: %d", kind))
 }
