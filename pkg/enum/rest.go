@@ -14,7 +14,7 @@ func enumerateAuthorId(url string) func(wp_http.Client, data.Constraints) ([]dat
 	return func(client wp_http.Client, opts data.Constraints) ([]data.ApiResponse, error) {
 		result := []data.ApiResponse{}
 		var overallErr error
-		for i := 1; i < opts.Limit; i++ {
+		for i := opts.Start; i < opts.End; i++ {
 			author_url := fmt.Sprintf("%s?author=%d", url, i)
 			resp := client.Send(author_url)
 			if resp.StatusCode < 100 {

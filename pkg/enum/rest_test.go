@@ -37,7 +37,7 @@ func TestEnumerateRestFailsWithLimit(t *testing.T) {
 	defer serverCloser.Close()
 
 	opts := data.DefaultConstraints()
-	opts.Limit = 5
+	opts.End = 5
 	client := wp_http.NewHttpClient(wp_http.CLIENT_WEB)
 	res, err := enumerateAuthorId(fmt.Sprintf("http://%s/", address))(client, opts)
 	if err != nil {

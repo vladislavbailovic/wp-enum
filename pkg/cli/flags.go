@@ -10,12 +10,14 @@ func GetFlags() data.Constraints {
 
 	url := flag.String("url", defaults.URL, "WordPress URL")
 	kind := flag.Int("enum", defaults.Kind, "Enumeration type")
-	limit := flag.Int("limit", defaults.Limit, "Limit to number of users")
+	start := flag.Int("start", defaults.Start, "Start enumeration at this user ID")
+	end := flag.Int("end", defaults.End, "End enumeration with this user ID")
 	flag.Parse()
 
 	defaults.URL = *url
 	defaults.Kind = *kind
-	defaults.Limit = *limit
+	defaults.Start = *start
+	defaults.End = *end
 
 	return defaults
 }
