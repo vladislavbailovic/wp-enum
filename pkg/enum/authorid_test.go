@@ -9,9 +9,12 @@ import (
 
 func TestEnumerateRestPassthrough(t *testing.T) {
 	client := wp_http.NewHttpClient(wp_http.CLIENT_PASSTHROUGH)
-	_, err := enumerateAuthorId("http://multiwp.test/calendar/")(client, data.DefaultConstraints())
-	if err == nil {
-		t.Fatalf("expected error to be nil")
+	authors, err := enumerateAuthorId("http://multiwp.test/calendar/")(client, data.DefaultConstraints())
+	if err != nil {
+		t.Fatalf("expected error to not be nil")
+	}
+	if len(authors) > 0 {
+		t.Fatalf("expected no results")
 	}
 }
 
@@ -41,6 +44,7 @@ func TestEnumerateRestFailsWithLimit(t *testing.T) {
 	client := wp_http.NewHttpClient(wp_http.CLIENT_WEB)
 	res, err := enumerateAuthorId(fmt.Sprintf("http://%s/", address))(client, opts)
 	if err != nil {
+		t.Log(err)
 		t.Fatalf("expected error to be nil")
 	}
 
