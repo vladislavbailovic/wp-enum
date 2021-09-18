@@ -5,15 +5,9 @@ import (
 	"fmt"
 
 	"wp-enum/pkg/data"
-	wp_http "wp-enum/pkg/http"
 )
 
-type apiResponse struct {
-	Name string `json:"name"`
-	Id   int    `json:"id"`
-}
-
-func Enumerate(kind data.EnumerationType, url string) (func(wp_http.Client, data.Constraints) (map[string]int, error), error) {
+func Enumerate(kind data.EnumerationType, url string) (data.Enumerator, error) {
 	if data.ENUM_JSON_API == kind {
 		return enumerateJsonApi(url), nil
 	}

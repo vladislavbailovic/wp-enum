@@ -6,9 +6,9 @@ import (
 	wp_http "wp-enum/pkg/http"
 )
 
-func enumerateJsonRoute(url string) func(wp_http.Client, data.Constraints) (map[string]int, error) {
+func enumerateJsonRoute(url string) func(wp_http.Client, data.Constraints) ([]data.ApiResponse, error) {
 	apiUrl := fmt.Sprintf("%s?rest_route=/wp/v2/users/", wp_http.NormalizeRootUrl(url))
-	return func(client wp_http.Client, limit data.Constraints) (map[string]int, error) {
+	return func(client wp_http.Client, limit data.Constraints) ([]data.ApiResponse, error) {
 		return getJsonUsers(apiUrl, client)
 	}
 }

@@ -26,8 +26,7 @@ func TestEnumerateRestSuccess(t *testing.T) {
 		t.Fatalf("expected error to be nil")
 	}
 
-	_, exists := res["admin"]
-	if !exists {
+	if res[0].Name != "admin" {
 		t.Fatalf("expected user admin to exist")
 	}
 }
@@ -45,8 +44,7 @@ func TestEnumerateRestFailsWithLimit(t *testing.T) {
 		t.Fatalf("expected error to be nil")
 	}
 
-	_, exists := res["admin"]
-	if exists {
-		t.Fatalf("expected user admin to not exist because it's after limit")
+	if len(res) > 0 {
+		t.Fatalf("expected no users to be found within limit")
 	}
 }

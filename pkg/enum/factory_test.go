@@ -23,8 +23,8 @@ func TestEnumerateReturnsErrorWithInvalidEnumType(t *testing.T) {
 }
 
 func jsonSuccess() http.Handler {
-	resp := []apiResponse{
-		apiResponse{Name: "admin", Id: 1},
+	resp := []data.ApiResponse{
+		data.ApiResponse{Name: "admin", Id: 1},
 	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		json, _ := json.Marshal(resp)

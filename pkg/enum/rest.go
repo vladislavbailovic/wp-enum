@@ -9,10 +9,10 @@ import (
 	wp_http "wp-enum/pkg/http"
 )
 
-func enumerateAuthorId(url string) func(wp_http.Client, data.Constraints) (map[string]int, error) {
+func enumerateAuthorId(url string) func(wp_http.Client, data.Constraints) ([]data.ApiResponse, error) {
 	url = wp_http.NormalizeRootUrl(url)
-	return func(client wp_http.Client, opts data.Constraints) (map[string]int, error) {
-		result := make(map[string]int)
+	return func(client wp_http.Client, opts data.Constraints) ([]data.ApiResponse, error) {
+		result := []data.ApiResponse{}
 		var overallErr error
 		for i := 1; i < opts.Limit; i++ {
 			author_url := fmt.Sprintf("%s?author=%d", url, i)
@@ -30,7 +30,7 @@ func enumerateAuthorId(url string) func(wp_http.Client, data.Constraints) (map[s
 					rawUser = strings.Replace(location, rpl, "", 1)
 				}
 				user := strings.Replace(rawUser, "/", "", -1)
-				result[user] = i
+				result = append(result, data.ApiResponse{user, i})
 			}
 		}
 		if overallErr != nil && len(result) == 0 {

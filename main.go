@@ -27,7 +27,7 @@ func main() {
 		panic(err)
 	}
 
-	for username, id := range res {
-		fmt.Printf("%s:%d\n", username, id)
+	for _, user := range res {
+		fmt.Printf("%s:%d\n", user.Name, user.Id)
 	}
 }
