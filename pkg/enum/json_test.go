@@ -16,7 +16,7 @@ func TestEnumerateApiPassthrough(t *testing.T) {
 }
 
 func TestEnumerateJsonApiSuccess(t *testing.T) {
-	address := "127.0.0.1:6666"
+	address := getListenerAddress()
 	serverCloser := fakeJsonApiSuccessServer(address, jsonSuccess())
 	defer serverCloser.Close()
 
@@ -33,7 +33,7 @@ func TestEnumerateJsonApiSuccess(t *testing.T) {
 }
 
 func TestEnumerateJsonApiFailure(t *testing.T) {
-	address := "127.0.0.1:6669"
+	address := getListenerAddress()
 	serverCloser := fakeJsonApiSuccessServer(address, jsonFailure())
 	defer serverCloser.Close()
 

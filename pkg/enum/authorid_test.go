@@ -16,7 +16,7 @@ func TestEnumerateRestPassthrough(t *testing.T) {
 }
 
 func TestEnumerateRestSuccess(t *testing.T) {
-	address := "127.0.0.1:6666"
+	address := getListenerAddress()
 	serverCloser := fakeJsonApiSuccessServer(address, restSuccess())
 	defer serverCloser.Close()
 
@@ -32,7 +32,7 @@ func TestEnumerateRestSuccess(t *testing.T) {
 }
 
 func TestEnumerateRestFailsWithLimit(t *testing.T) {
-	address := "127.0.0.1:6666"
+	address := getListenerAddress()
 	serverCloser := fakeJsonApiSuccessServer(address, restSuccess())
 	defer serverCloser.Close()
 

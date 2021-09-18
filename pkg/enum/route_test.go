@@ -17,7 +17,7 @@ func TestEnumerateRoutePassthrough(t *testing.T) {
 }
 
 func TestEnumerateJsonRouteSuccess(t *testing.T) {
-	address := "127.0.0.1:6667"
+	address := getListenerAddress()
 	serverCloser := fakeJsonApiSuccessServer(address, jsonSuccess())
 	defer serverCloser.Close()
 

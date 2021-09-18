@@ -2,7 +2,9 @@ package enum
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
+	"math/rand"
 	"net"
 	"net/http"
 	"testing"
@@ -20,6 +22,11 @@ func TestEnumerateReturnsErrorWithInvalidEnumType(t *testing.T) {
 			t.Fatalf("expected error for invalid enumeration type")
 		}
 	}
+}
+
+func getListenerAddress() string {
+	rand.Seed(time.Now().UnixNano())
+	return fmt.Sprintf("127.0.0.1:%d", rand.Intn(3333)+6666)
 }
 
 func jsonSuccess() http.Handler {
