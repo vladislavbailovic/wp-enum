@@ -39,7 +39,7 @@ func restSuccess() http.Handler {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
-		if "1" == author[0] {
+		if "9" == author[0] {
 			w.Header().Set("Location", "admin")
 			w.WriteHeader(http.StatusFound)
 			return

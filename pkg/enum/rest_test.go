@@ -30,3 +30,20 @@ func TestEnumerateRestSuccess(t *testing.T) {
 		t.Fatalf("expected user admin to exist")
 	}
 }
+
+func TestEnumerateRestFailsWithLimit(t *testing.T) {
+	address := "127.0.0.1:6666"
+	serverCloser := fakeJsonApiSuccessServer(address, restSuccess())
+	defer serverCloser.Close()
+
+	client := wp_http.NewHttpClient(wp_http.CLIENT_WEB)
+	res, err := enumerateAuthorId(fmt.Sprintf("http://%s/", address))(client, 5)
+	if err != nil {
+		t.Fatalf("expected error to be nil")
+	}
+
+	_, exists := res["admin"]
+	if exists {
+		t.Fatalf("expected user admin to not exist because it's after limit")
+	}
+}

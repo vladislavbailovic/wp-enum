@@ -29,6 +29,6 @@ func TestEnumerateJsonApiSuccess(t *testing.T) {
 
 	_, exists := res["admin"]
 	if !exists {
-		t.Fatalf("expected user bog to exist")
+		t.Fatalf("expected user admin to exist")
 	}
 }
