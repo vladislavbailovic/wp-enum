@@ -1,7 +1,6 @@
 package http
 
 import (
-	"net/http"
 	"testing"
 )
 
@@ -50,10 +49,18 @@ func TestNewHttpClientReturnsWebClientWhenRequested(t *testing.T) {
 	}
 }
 
+func TestPassthroughClientSend(t *testing.T) {
+	nc := NewHttpClient(CLIENT_PASSTHROUGH)
+
+	resp := nc.Send("whatever.com")
+	if resp.StatusCode != -1 {
+		t.Fatalf("expected negative status code")
+	}
+}
+
 func TestWebClientSend(t *testing.T) {
 	nc := NewHttpClient(CLIENT_WEB)
-	req, _ := http.NewRequest("GET", "http://whatever", nil)
 
-	resp := nc.Send(req)
+	resp := nc.Send("whatever.com")
 	t.Log(resp)
 }

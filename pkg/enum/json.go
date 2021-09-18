@@ -5,14 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 
 	wp_http "wp-enum/pkg/http"
 )
 
 func getJson(apiUrl string, client wp_http.Client) ([]apiResponse, error) {
-	req, _ := http.NewRequest("GET", apiUrl, nil)
-	resp := client.Send(req)
+	resp := client.Send(apiUrl)
 	if 200 != resp.StatusCode {
 		return nil, errors.New(fmt.Sprintf("non-200 status code contacting JSON API at %s: %d", apiUrl, resp.StatusCode))
 	}
@@ -42,7 +40,7 @@ func getJsonUsers(apiUrl string, client wp_http.Client) (map[string]int, error) 
 }
 
 func enumerateJsonApi(url string) func(wp_http.Client, ...int) (map[string]int, error) {
-	apiUrl := fmt.Sprintf("%swp-json/wp/v2/users", url)
+	apiUrl := fmt.Sprintf("%swp-json/wp/v2/users", wp_http.NormalizeRootUrl(url))
 	return func(client wp_http.Client, limit ...int) (map[string]int, error) {
 		return getJsonUsers(apiUrl, client)
 	}

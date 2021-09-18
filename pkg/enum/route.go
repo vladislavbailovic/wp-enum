@@ -6,7 +6,7 @@ import (
 )
 
 func enumerateJsonRoute(url string) func(wp_http.Client, ...int) (map[string]int, error) {
-	apiUrl := fmt.Sprintf("%s?rest_route=/wp/v2/users/", url)
+	apiUrl := fmt.Sprintf("%s?rest_route=/wp/v2/users/", wp_http.NormalizeRootUrl(url))
 	return func(client wp_http.Client, limit ...int) (map[string]int, error) {
 		return getJsonUsers(apiUrl, client)
 	}

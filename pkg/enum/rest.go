@@ -3,7 +3,6 @@ package enum
 import (
 	"errors"
 	"fmt"
-	"net/http"
 	"strings"
 
 	wp_http "wp-enum/pkg/http"
@@ -18,9 +17,8 @@ func enumerateAuthorId(url string) func(wp_http.Client, ...int) (map[string]int,
 		result := make(map[string]int)
 		var overallErr error
 		for i := 1; i < maxUsers; i++ {
-			author_url := fmt.Sprintf("%s?author=%d", url, i)
-			req, _ := http.NewRequest("GET", author_url, nil)
-			resp := client.Send(req)
+			author_url := fmt.Sprintf("%s?author=%d", wp_http.NormalizeRootUrl(url), i)
+			resp := client.Send(author_url)
 			if resp.StatusCode < 100 {
 				overallErr = errors.New("passthrough")
 			} else if resp.StatusCode > 300 && resp.StatusCode < 400 {

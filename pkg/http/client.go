@@ -13,7 +13,7 @@ const (
 )
 
 type Client interface {
-	Send(*http.Request) http.Response
+	Send(string) http.Response
 }
 
 func NewHttpClient(ctype ...ClientType) Client {
@@ -36,7 +36,7 @@ func NewHttpClient(ctype ...ClientType) Client {
 
 type PassthroughClient struct{}
 
-func (nc PassthroughClient) Send(req *http.Request) http.Response {
+func (nc PassthroughClient) Send(url string) http.Response {
 	return http.Response{StatusCode: -1}
 }
 
@@ -44,8 +44,8 @@ type WebClient struct {
 	http *http.Client
 }
 
-func (wc WebClient) Send(req *http.Request) http.Response {
-	response, err := wc.http.Do(req)
+func (wc WebClient) Send(url string) http.Response {
+	response, err := wc.http.Get(NormalizeUrl(url))
 	if err != nil {
 		return http.Response{StatusCode: -1}
 	}
