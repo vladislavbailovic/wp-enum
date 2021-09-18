@@ -1,20 +1,34 @@
 package enum
 
 import (
+	"fmt"
 	"testing"
 	wp_http "wp-enum/pkg/http"
 )
 
-func TestEnumerateJsonApi(t *testing.T) {
+func TestEnumerateRoutePassthrough(t *testing.T) {
 	client := wp_http.NewHttpClient(wp_http.CLIENT_PASSTHROUGH)
-	res, err := enumerateJsonApi("http://multiwp.test/calendar/")(client)
+	_, err := enumerateJsonRoute("http://multiwp.test/calendar/")(client)
+	if err == nil {
+		t.Log(err)
+		t.Fatalf("expected error to be nil")
+	}
+}
+
+func TestEnumerateJsonRouteSuccess(t *testing.T) {
+	address := "127.0.0.1:6667"
+	serverCloser := fakeJsonApiSuccessServer(address, jsonSuccess())
+	defer serverCloser.Close()
+
+	client := wp_http.NewHttpClient(wp_http.CLIENT_WEB)
+	res, err := enumerateJsonRoute(fmt.Sprintf("http://%s/", address))(client)
 	if err != nil {
 		t.Log(err)
 		t.Fatalf("expected error to be nil")
 	}
 
-	_, exists := res["bog"]
+	_, exists := res["admin"]
 	if !exists {
-		t.Fatalf("expected user bog to exist")
+		t.Fatalf("expected user admin to exist")
 	}
 }

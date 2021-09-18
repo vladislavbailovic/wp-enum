@@ -52,7 +52,7 @@ func TestNewHttpClientReturnsWebClientWhenRequested(t *testing.T) {
 
 func TestWebClientSend(t *testing.T) {
 	nc := NewHttpClient(CLIENT_WEB)
-	req, _ := http.NewRequest("GET", "http://whatever.com", nil)
+	req, _ := http.NewRequest("GET", "http://whatever", nil)
 
 	resp := nc.Send(req)
 	t.Log(resp)
