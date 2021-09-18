@@ -5,19 +5,16 @@ import (
 	"fmt"
 	"strings"
 
+	"wp-enum/pkg/data"
 	wp_http "wp-enum/pkg/http"
 )
 
-func enumerateAuthorId(url string) func(wp_http.Client, ...int) (map[string]int, error) {
+func enumerateAuthorId(url string) func(wp_http.Client, data.Constraints) (map[string]int, error) {
 	url = wp_http.NormalizeRootUrl(url)
-	return func(client wp_http.Client, limit ...int) (map[string]int, error) {
-		maxUsers := 100
-		if len(limit) > 0 {
-			maxUsers = limit[0]
-		}
+	return func(client wp_http.Client, opts data.Constraints) (map[string]int, error) {
 		result := make(map[string]int)
 		var overallErr error
-		for i := 1; i < maxUsers; i++ {
+		for i := 1; i < opts.Limit; i++ {
 			author_url := fmt.Sprintf("%s?author=%d", url, i)
 			resp := client.Send(author_url)
 			if resp.StatusCode < 100 {

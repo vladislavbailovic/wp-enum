@@ -3,12 +3,13 @@ package enum
 import (
 	"fmt"
 	"testing"
+	"wp-enum/pkg/data"
 	wp_http "wp-enum/pkg/http"
 )
 
 func TestEnumerateApiPassthrough(t *testing.T) {
 	client := wp_http.NewHttpClient(wp_http.CLIENT_PASSTHROUGH)
-	_, err := enumerateJsonApi("http://multiwp.test/calendar/")(client)
+	_, err := enumerateJsonApi("http://multiwp.test/calendar/")(client, data.DefaultConstraints())
 	if err == nil {
 		t.Fatalf("expected error")
 	}
@@ -20,7 +21,7 @@ func TestEnumerateJsonApiSuccess(t *testing.T) {
 	defer serverCloser.Close()
 
 	client := wp_http.NewHttpClient(wp_http.CLIENT_WEB)
-	res, err := enumerateJsonApi(fmt.Sprintf("http://%s/", address))(client)
+	res, err := enumerateJsonApi(fmt.Sprintf("http://%s/", address))(client, data.DefaultConstraints())
 	if err != nil {
 		t.Log(err)
 		t.Fatalf("expected error to be nil")
@@ -38,7 +39,7 @@ func TestEnumerateJsonApiFailure(t *testing.T) {
 	defer serverCloser.Close()
 
 	client := wp_http.NewHttpClient(wp_http.CLIENT_WEB)
-	_, err := enumerateJsonApi(fmt.Sprintf("http://%s/", address))(client)
+	_, err := enumerateJsonApi(fmt.Sprintf("http://%s/", address))(client, data.DefaultConstraints())
 	if err == nil {
 		t.Fatalf("expected error")
 	}

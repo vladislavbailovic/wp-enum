@@ -1,7 +1,5 @@
 package data
 
-import "wp-enum/pkg/enum"
-
 type Constraints struct {
 	URL   string
 	Kind  int
@@ -11,7 +9,7 @@ type Constraints struct {
 func DefaultConstraints() Constraints {
 	return Constraints{
 		URL:   "",
-		Kind:  int(enum.TYPE_JSON_API),
+		Kind:  0,
 		Limit: 10,
 	}
 }

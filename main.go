@@ -21,7 +21,7 @@ func main() {
 		panic(err)
 	}
 
-	res, err := enumeration(client, params.Limit)
+	res, err := enumeration(client, params)
 	if err != nil {
 		panic(err)
 	}

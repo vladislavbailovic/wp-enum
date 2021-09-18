@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
+	"wp-enum/pkg/data"
 	wp_http "wp-enum/pkg/http"
 )
 
@@ -39,9 +40,9 @@ func getJsonUsers(apiUrl string, client wp_http.Client) (map[string]int, error) 
 	return result, nil
 }
 
-func enumerateJsonApi(url string) func(wp_http.Client, ...int) (map[string]int, error) {
+func enumerateJsonApi(url string) func(wp_http.Client, data.Constraints) (map[string]int, error) {
 	apiUrl := fmt.Sprintf("%swp-json/wp/v2/users", wp_http.NormalizeRootUrl(url))
-	return func(client wp_http.Client, limit ...int) (map[string]int, error) {
+	return func(client wp_http.Client, limit data.Constraints) (map[string]int, error) {
 		return getJsonUsers(apiUrl, client)
 	}
 }
