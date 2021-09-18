@@ -31,6 +31,12 @@ func jsonSuccess() http.Handler {
 	})
 }
 
+func jsonFailure() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		io.WriteString(w, "whatever")
+	})
+}
+
 func restSuccess() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		author, ok := r.URL.Query()["author"]

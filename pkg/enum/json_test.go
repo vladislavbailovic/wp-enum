@@ -10,13 +10,12 @@ func TestEnumerateApiPassthrough(t *testing.T) {
 	client := wp_http.NewHttpClient(wp_http.CLIENT_PASSTHROUGH)
 	_, err := enumerateJsonApi("http://multiwp.test/calendar/")(client)
 	if err == nil {
-		t.Log(err)
-		t.Fatalf("expected error to be nil")
+		t.Fatalf("expected error")
 	}
 }
 
 func TestEnumerateJsonApiSuccess(t *testing.T) {
-	address := ":6666"
+	address := "127.0.0.1:6666"
 	serverCloser := fakeJsonApiSuccessServer(address, jsonSuccess())
 	defer serverCloser.Close()
 
@@ -30,5 +29,17 @@ func TestEnumerateJsonApiSuccess(t *testing.T) {
 	_, exists := res["admin"]
 	if !exists {
 		t.Fatalf("expected user admin to exist")
+	}
+}
+
+func TestEnumerateJsonApiFailure(t *testing.T) {
+	address := "127.0.0.1:6669"
+	serverCloser := fakeJsonApiSuccessServer(address, jsonFailure())
+	defer serverCloser.Close()
+
+	client := wp_http.NewHttpClient(wp_http.CLIENT_WEB)
+	_, err := enumerateJsonApi(fmt.Sprintf("http://%s/", address))(client)
+	if err == nil {
+		t.Fatalf("expected error")
 	}
 }

@@ -11,23 +11,17 @@ import (
 )
 
 func getJson(apiUrl string, client wp_http.Client) ([]apiResponse, error) {
-	req, err := http.NewRequest("GET", apiUrl, nil)
-	if err != nil {
-		return nil, err
-	}
+	req, _ := http.NewRequest("GET", apiUrl, nil)
 	resp := client.Send(req)
 	if 200 != resp.StatusCode {
 		return nil, errors.New(fmt.Sprintf("non-200 status code contacting JSON API at %s: %d", apiUrl, resp.StatusCode))
 	}
 
 	defer resp.Body.Close()
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
+	bodyBytes, _ := ioutil.ReadAll(resp.Body)
 
 	var tmp []apiResponse
-	err = json.Unmarshal(bodyBytes, &tmp)
+	err := json.Unmarshal(bodyBytes, &tmp)
 	if err != nil {
 		return nil, err
 	}
