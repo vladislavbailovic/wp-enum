@@ -48,7 +48,7 @@ func getListenerAddress() string {
 
 func jsonSuccess() http.Handler {
 	resp := []data.ApiResponse{
-		data.ApiResponse{Name: "admin", Id: 1},
+		data.ApiResponse{Username: "admin", UserID: 1},
 	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		json, _ := json.Marshal(resp)
@@ -58,7 +58,7 @@ func jsonSuccess() http.Handler {
 
 func jsonFailureForDefaultUa() http.Handler {
 	resp := []data.ApiResponse{
-		data.ApiResponse{Name: "admin", Id: 1},
+		data.ApiResponse{Username: "admin", UserID: 1},
 	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.UserAgent() == wp_http.DEFAULT_USER_AGENT {

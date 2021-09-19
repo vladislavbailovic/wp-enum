@@ -28,7 +28,7 @@ func TestEnumerateJsonRouteSuccess(t *testing.T) {
 		t.Fatalf("expected error to be nil")
 	}
 
-	if res[0].Name != "admin" {
+	if res[0].Username != "admin" {
 		t.Fatalf("expected user admin to exist")
 	}
 }

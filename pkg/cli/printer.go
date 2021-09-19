@@ -18,8 +18,8 @@ func Print(results []data.ApiResponse, opts data.Constraints) {
 	fmt.Fprintln(os.Stderr, formatLine([]string{"Username", "User ID"}))
 	for _, result := range results {
 		fmt.Println(formatLine([]string{
-			result.Name,
-			fmt.Sprintf("%d", result.Id),
+			result.Username,
+			fmt.Sprintf("%d", result.UserID),
 		}))
 	}
 }
