@@ -17,6 +17,10 @@ func main() {
 	kind := data.EnumerationType(params.Kind)
 
 	client := wp_http.NewHttpClient(wp_http.CLIENT_WEB)
+	if params.RandomUA {
+		ua := wp_http.NewRandomUA()
+		client.SetAgent(&ua)
+	}
 	enumeration, err := enum.Enumerate(kind, params.URL)
 	if err != nil {
 		panic(err)
