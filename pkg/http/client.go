@@ -45,7 +45,11 @@ type WebClient struct {
 }
 
 func (wc WebClient) Send(url string) http.Response {
-	response, err := wc.http.Get(NormalizeUrl(url))
+	request, err := http.NewRequest("GET", NormalizeUrl(url), nil)
+	if err != nil {
+		return http.Response{StatusCode: -1}
+	}
+	response, err := wc.http.Do(request)
 	if err != nil {
 		return http.Response{StatusCode: -1}
 	}

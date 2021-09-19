@@ -24,6 +24,20 @@ func TestEnumerateReturnsErrorWithInvalidEnumType(t *testing.T) {
 	}
 }
 
+func TestEnumerateReturnsEnumerator(t *testing.T) {
+	tests := []data.EnumerationType{
+		data.ENUM_JSON_API,
+		data.ENUM_JSON_ROUTE,
+		data.ENUM_AUTHOR_ID,
+	}
+	for _, e := range tests {
+		_, err := Enumerate(e, "test.test")
+		if err != nil {
+			t.Fatalf("expected enumerator for %d, got error", e)
+		}
+	}
+}
+
 func getListenerAddress() string {
 	rand.Seed(time.Now().UnixNano())
 	return fmt.Sprintf("127.0.0.1:%d", rand.Intn(3333)+6666)
@@ -53,10 +67,34 @@ func restSuccess() http.Handler {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
-		if "9" == author[0] {
+		if "8" == author[0] {
 			w.Header().Set("Location", "admin")
 			w.WriteHeader(http.StatusFound)
 			return
+		}
+		if "9" == author[0] {
+			w.Header().Set("Location", "/author/admin")
+			w.WriteHeader(http.StatusFound)
+			return
+		}
+		w.WriteHeader(http.StatusNotFound)
+	})
+}
+
+func restSuccessMultipleUsers() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		author, ok := r.URL.Query()["author"]
+
+		if !ok {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		for i := 3; i < 10; i++ {
+			if fmt.Sprintf("%d", i) == author[0] {
+				w.Header().Set("Location", fmt.Sprintf("/author/user%d", i))
+				w.WriteHeader(http.StatusFound)
+				return
+			}
 		}
 		w.WriteHeader(http.StatusNotFound)
 	})

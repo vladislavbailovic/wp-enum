@@ -34,6 +34,22 @@ func TestEnumerateRestSuccess(t *testing.T) {
 	}
 }
 
+func TestEnumerateRestSuccessManyUsers(t *testing.T) {
+	address := getListenerAddress()
+	serverCloser := fakeJsonApiSuccessServer(address, restSuccessMultipleUsers())
+	defer serverCloser.Close()
+
+	client := wp_http.NewHttpClient(wp_http.CLIENT_WEB)
+	res, err := enumerateAuthorId(fmt.Sprintf("http://%s/", address))(client, data.DefaultConstraints())
+	if err != nil {
+		t.Fatalf("expected error to be nil")
+	}
+
+	if len(res) < 7 {
+		t.Fatalf("expected many users, got %d", len(res))
+	}
+}
+
 func TestEnumerateRestFailsWithLimit(t *testing.T) {
 	address := getListenerAddress()
 	serverCloser := fakeJsonApiSuccessServer(address, restSuccess())
