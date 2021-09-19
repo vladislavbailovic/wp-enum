@@ -6,6 +6,7 @@ type Constraints struct {
 	Start    int
 	End      int
 	RandomUA bool
+	Pretty   bool
 }
 
 func DefaultConstraints() Constraints {
@@ -15,5 +16,6 @@ func DefaultConstraints() Constraints {
 		Start:    1,
 		End:      10,
 		RandomUA: false,
+		Pretty:   false,
 	}
 }
