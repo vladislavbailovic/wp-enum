@@ -49,6 +49,32 @@ func TestNewHttpClientReturnsWebClientWhenRequested(t *testing.T) {
 	}
 }
 
+func TestPtClientUaIsNotRandom(t *testing.T) {
+	pc := NewHttpClient(CLIENT_PASSTHROUGH)
+	if pc.GetAgent().isRandom {
+		t.Fatalf("passthrough client UA should not be random")
+	}
+
+	ua := UserAgent{true}
+	pc.SetAgent(&ua)
+	if pc.GetAgent().isRandom {
+		t.Fatalf("passthrough client UA should not be random even if set")
+	}
+}
+
+func TestWebClientUaRandomn(t *testing.T) {
+	client := NewHttpClient(CLIENT_WEB)
+	if client.GetAgent().isRandom {
+		t.Fatalf("web client UA should not be random by default")
+	}
+
+	ua := UserAgent{true}
+	client.SetAgent(&ua)
+	if !client.GetAgent().isRandom {
+		t.Fatalf("web client UA should be random when requested")
+	}
+}
+
 func TestPassthroughClientSend(t *testing.T) {
 	nc := NewHttpClient(CLIENT_PASSTHROUGH)
 

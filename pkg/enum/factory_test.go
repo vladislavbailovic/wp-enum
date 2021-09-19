@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 	"wp-enum/pkg/data"
+	wp_http "wp-enum/pkg/http"
 )
 
 func TestEnumerateReturnsErrorWithInvalidEnumType(t *testing.T) {
@@ -38,9 +39,11 @@ func TestEnumerateReturnsEnumerator(t *testing.T) {
 	}
 }
 
+// --- Test helpers ---
+
 func getListenerAddress() string {
 	rand.Seed(time.Now().UnixNano())
-	return fmt.Sprintf("127.0.0.1:%d", rand.Intn(3333)+6666)
+	return fmt.Sprintf("127.0.0.1:%d", rand.Intn(6666)+3333)
 }
 
 func jsonSuccess() http.Handler {
@@ -50,6 +53,20 @@ func jsonSuccess() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		json, _ := json.Marshal(resp)
 		w.Write(json)
+	})
+}
+
+func jsonFailureForDefaultUa() http.Handler {
+	resp := []data.ApiResponse{
+		data.ApiResponse{Name: "admin", Id: 1},
+	}
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.UserAgent() == wp_http.DEFAULT_USER_AGENT {
+			io.WriteString(w, "whatever")
+		} else {
+			json, _ := json.Marshal(resp)
+			w.Write(json)
+		}
 	})
 }
 

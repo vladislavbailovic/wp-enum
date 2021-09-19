@@ -43,3 +43,22 @@ func TestEnumerateJsonApiFailure(t *testing.T) {
 		t.Fatalf("expected error")
 	}
 }
+
+func TestEnumerateJsonApiFailureWithDefaultUa(t *testing.T) {
+	address := getListenerAddress()
+	serverCloser := fakeJsonApiSuccessServer(address, jsonFailureForDefaultUa())
+	defer serverCloser.Close()
+
+	client := wp_http.NewHttpClient(wp_http.CLIENT_WEB)
+	_, err := enumerateJsonApi(fmt.Sprintf("http://%s/", address))(client, data.DefaultConstraints())
+	if err == nil {
+		t.Fatalf("expected error")
+	}
+
+	ua := wp_http.NewRandomUA()
+	client.SetAgent(&ua)
+	_, err = enumerateJsonApi(fmt.Sprintf("http://%s/", address))(client, data.DefaultConstraints())
+	if err != nil {
+		t.Fatalf("expected success")
+	}
+}
