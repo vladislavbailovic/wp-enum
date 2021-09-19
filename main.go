@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"wp-enum/pkg/cli"
 	"wp-enum/pkg/data"
 	"wp-enum/pkg/enum"
@@ -31,7 +30,5 @@ func main() {
 		panic(err)
 	}
 
-	for _, user := range res {
-		fmt.Printf("%s:%d\n", user.Name, user.Id)
-	}
+	cli.Print(res, params)
 }
