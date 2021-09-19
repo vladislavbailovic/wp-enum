@@ -44,7 +44,9 @@ func getAuthorFromResponse(author_url string, resp http.Response) (string, error
 		rawUser = location[authorParam+8:]
 	} else {
 		rpl := fmt.Sprintf("%sauthor/", author_url)
-		rawUser = strings.Replace(location, rpl, "", 1)
+		if strings.HasPrefix(location, rpl) {
+			rawUser = strings.Replace(location, rpl, "", 1)
+		}
 	}
 	return strings.Replace(rawUser, "/", "", -1), nil
 }
