@@ -3,14 +3,16 @@ package http
 import (
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 type CookieType string
 
 const (
 	COOKIE_WP_TEST      CookieType = "wordpress_test_cookie"
-	COOKIE_WP_LOGGED_IN CookieType = "logged_in"
-	COOKIE_WP_SEC       CookieType = "sec"
+	COOKIE_WP_GENERIC   CookieType = "wordpress"
+	COOKIE_WP_LOGGED_IN CookieType = "wordpress_logged_in"
+	COOKIE_WP_SEC       CookieType = "wordpress_sec"
 )
 
 type CookieStore struct {
@@ -23,7 +25,7 @@ type WPCookie struct {
 
 func (wpc WPCookie) Get(prefix CookieType, rawValue ...string) *http.Cookie {
 	var value string
-	name := fmt.Sprintf("wordpress_%s_%s", string(prefix), wpc.hash)
+	name := fmt.Sprintf("%s_%s", string(prefix), wpc.hash)
 	if len(rawValue) == 1 {
 		value = rawValue[0]
 	}
@@ -41,9 +43,10 @@ func addClientCookies(client Client, cookies []*http.Cookie) {
 }
 
 func AddMockWPCookies(client Client) {
-	wpc := WPCookie{"whatever"}
+	wpc := WPCookie{strings.Repeat("d3adb3af", 4)}
 	mocks := []*http.Cookie{
 		wpc.Get(COOKIE_WP_TEST),
+		wpc.Get(COOKIE_WP_GENERIC),
 		wpc.Get(COOKIE_WP_LOGGED_IN, "mock"),
 		wpc.Get(COOKIE_WP_SEC, "mock"),
 	}

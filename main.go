@@ -20,6 +20,9 @@ func main() {
 		ua := wp_http.NewRandomUA()
 		client.SetAgent(&ua)
 	}
+	if params.MockCookies {
+		wp_http.AddMockWPCookies(client)
+	}
 	enumeration, err := enum.Enumerate(kind, params.URL)
 	if err != nil {
 		panic(err)

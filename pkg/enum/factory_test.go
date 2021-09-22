@@ -85,7 +85,7 @@ func jsonFailureWithNoWpCookies() http.Handler {
 			hasWp = true
 			break
 		}
-		if !hasWp || 3 != len(cookies) {
+		if !hasWp || 4 != len(cookies) {
 			io.WriteString(w, "whatever")
 		} else {
 			json, _ := json.Marshal(resp)
