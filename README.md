@@ -28,4 +28,8 @@ Usage:
         Pretty-print the results
   -ua
         Randomize User-Agent
+  -cookies
+        Send mock WP cookies. Helps with some modsec rulesets (comodo WAF)
+  -waf
+        Attempt to work around a WAF (randomizes UA and sends mock WP cookies)
 ```
