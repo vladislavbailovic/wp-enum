@@ -2,7 +2,7 @@ package cli
 
 import (
 	"flag"
-	"wp-enum/pkg/data"
+	"wp-user-enum/pkg/data"
 )
 
 func GetFlags() data.Constraints {

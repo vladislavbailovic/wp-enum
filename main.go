@@ -1,10 +1,10 @@
 package main
 
 import (
-	"wp-enum/pkg/cli"
-	"wp-enum/pkg/data"
-	"wp-enum/pkg/enum"
-	wp_http "wp-enum/pkg/http"
+	"wp-user-enum/pkg/cli"
+	"wp-user-enum/pkg/data"
+	"wp-user-enum/pkg/enum"
+	wp_http "wp-user-enum/pkg/http"
 )
 
 func main() {

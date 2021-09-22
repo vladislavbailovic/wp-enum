@@ -1,6 +1,6 @@
 package data
 
-import wp_http "wp-enum/pkg/http"
+import wp_http "wp-user-enum/pkg/http"
 
 type EnumerationType int
 

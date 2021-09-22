@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"wp-enum/pkg/data"
+	"wp-user-enum/pkg/data"
 )
 
 func Enumerate(kind data.EnumerationType, url string) (data.Enumerator, error) {

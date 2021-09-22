@@ -7,8 +7,8 @@ import (
 	"strings"
 	"sync"
 
-	"wp-enum/pkg/data"
-	wp_http "wp-enum/pkg/http"
+	"wp-user-enum/pkg/data"
+	wp_http "wp-user-enum/pkg/http"
 )
 
 type authorReq struct {

@@ -1,3 +1,3 @@
-module wp-enum
+module wp-user-enum
 
 go 1.14

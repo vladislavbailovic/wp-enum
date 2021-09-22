@@ -9,8 +9,8 @@ import (
 	"net/http"
 	"testing"
 	"time"
-	"wp-enum/pkg/data"
-	wp_http "wp-enum/pkg/http"
+	"wp-user-enum/pkg/data"
+	wp_http "wp-user-enum/pkg/http"
 )
 
 func TestEnumerateReturnsErrorWithInvalidEnumType(t *testing.T) {

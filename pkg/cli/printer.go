@@ -5,7 +5,7 @@ import (
 	"math"
 	"os"
 	"strings"
-	"wp-enum/pkg/data"
+	"wp-user-enum/pkg/data"
 )
 
 func Print(results []data.ApiResponse, opts data.Constraints) {

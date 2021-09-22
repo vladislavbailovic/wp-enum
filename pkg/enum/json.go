@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"wp-enum/pkg/data"
-	wp_http "wp-enum/pkg/http"
+	"wp-user-enum/pkg/data"
+	wp_http "wp-user-enum/pkg/http"
 )
 
 func getJson(apiUrl string, client wp_http.Client) ([]data.ApiResponse, error) {

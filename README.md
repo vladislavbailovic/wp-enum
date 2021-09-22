@@ -1,5 +1,5 @@
-WP Enum - WordPress User Enumeration
-====================================
+WP User Enum - WordPress User Enumeration
+=========================================
 
 End goal is to be able to enumerate WordPress users on a site, using different techniques:
 

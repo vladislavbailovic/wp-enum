@@ -3,8 +3,8 @@ package enum
 import (
 	"fmt"
 	"testing"
-	"wp-enum/pkg/data"
-	wp_http "wp-enum/pkg/http"
+	"wp-user-enum/pkg/data"
+	wp_http "wp-user-enum/pkg/http"
 )
 
 func TestEnumerateRoutePassthrough(t *testing.T) {
