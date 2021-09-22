@@ -62,3 +62,21 @@ func TestEnumerateJsonApiFailureWithDefaultUa(t *testing.T) {
 		t.Fatalf("expected success")
 	}
 }
+
+func TestEnumerateJsonApiFailuerWithoutWpCookies(t *testing.T) {
+	address := getListenerAddress()
+	serverCloser := fakeJsonApiSuccessServer(address, jsonFailureWithNoWpCookies())
+	defer serverCloser.Close()
+
+	client := wp_http.NewHttpClient(wp_http.CLIENT_WEB)
+	_, err := enumerateJsonApi(fmt.Sprintf("http://%s/", address))(client, data.DefaultConstraints())
+	if err == nil {
+		t.Fatalf("expected error")
+	}
+
+	wp_http.AddMockWPCookies(client)
+	_, err = enumerateJsonApi(fmt.Sprintf("http://%s/", address))(client, data.DefaultConstraints())
+	if err != nil {
+		t.Fatalf("expected success")
+	}
+}

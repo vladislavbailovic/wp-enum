@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net"
 	"net/http"
+	"strings"
 	"testing"
 	"time"
 	"wp-user-enum/pkg/data"
@@ -62,6 +63,29 @@ func jsonFailureForDefaultUa() http.Handler {
 	}
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.UserAgent() == wp_http.DEFAULT_USER_AGENT {
+			io.WriteString(w, "whatever")
+		} else {
+			json, _ := json.Marshal(resp)
+			w.Write(json)
+		}
+	})
+}
+
+func jsonFailureWithNoWpCookies() http.Handler {
+	resp := []data.ApiResponse{
+		data.ApiResponse{Username: "admin", UserID: 1},
+	}
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		cookies := r.Cookies()
+		hasWp := false
+		for _, c := range cookies {
+			if !strings.Contains(c.Name, "wordpress") {
+				continue
+			}
+			hasWp = true
+			break
+		}
+		if !hasWp || 3 != len(cookies) {
 			io.WriteString(w, "whatever")
 		} else {
 			json, _ := json.Marshal(resp)

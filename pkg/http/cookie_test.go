@@ -43,7 +43,7 @@ func TestWebClientAddsCookies(t *testing.T) {
 
 func TestAddMockWpCookies(t *testing.T) {
 	client := NewHttpClient(CLIENT_WEB)
-	addMockWPCookies(client)
+	AddMockWPCookies(client)
 
 	if len(client.GetCookies()) != 3 {
 		t.Fatalf("should have fake wp cookies added")

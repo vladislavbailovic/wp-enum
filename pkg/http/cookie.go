@@ -40,7 +40,7 @@ func addClientCookies(client Client, cookies []*http.Cookie) {
 	}
 }
 
-func addMockWPCookies(client Client) {
+func AddMockWPCookies(client Client) {
 	wpc := WPCookie{"whatever"}
 	mocks := []*http.Cookie{
 		wpc.Get(COOKIE_WP_TEST),

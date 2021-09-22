@@ -72,6 +72,12 @@ func (wc WebClient) Send(url string) http.Response {
 	}
 
 	wc.ua.SetHeader(request)
+	if wc.HasCookies() {
+		for _, ck := range wc.GetCookies() {
+			request.AddCookie(ck)
+		}
+	}
+
 	response, err := wc.http.Do(request)
 	if err != nil {
 		return http.Response{StatusCode: -1}
