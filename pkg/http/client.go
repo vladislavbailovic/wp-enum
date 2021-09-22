@@ -14,8 +14,13 @@ const (
 
 type Client interface {
 	Send(string) http.Response
+
 	GetAgent() *UserAgent
 	SetAgent(ua *UserAgent)
+
+	GetCookies() []*http.Cookie
+	HasCookies() bool
+	AddCookie(*http.Cookie)
 }
 
 func NewHttpClient(ctype ...ClientType) Client {
@@ -32,7 +37,7 @@ func NewHttpClient(ctype ...ClientType) Client {
 				return http.ErrUseLastResponse
 			},
 		}
-		return WebClient{http: client, ua: &ua}
+		return WebClient{http: client, ua: &ua, cookies: &CookieStore{}}
 	}
 	return PassthroughClient{}
 }
@@ -46,10 +51,18 @@ func (nc PassthroughClient) SetAgent(ua *UserAgent) {}
 func (nc PassthroughClient) GetAgent() *UserAgent {
 	return &UserAgent{}
 }
+func (nc PassthroughClient) AddCookie(c *http.Cookie) {}
+func (nc PassthroughClient) HasCookies() bool {
+	return false
+}
+func (nc PassthroughClient) GetCookies() []*http.Cookie {
+	return []*http.Cookie{}
+}
 
 type WebClient struct {
-	http *http.Client
-	ua   *UserAgent
+	http    *http.Client
+	ua      *UserAgent
+	cookies *CookieStore
 }
 
 func (wc WebClient) Send(url string) http.Response {
@@ -70,4 +83,13 @@ func (wc WebClient) SetAgent(ua *UserAgent) {
 }
 func (wc WebClient) GetAgent() *UserAgent {
 	return wc.ua
+}
+func (wc WebClient) AddCookie(c *http.Cookie) {
+	wc.cookies.store = append(wc.cookies.store, c)
+}
+func (wc WebClient) GetCookies() []*http.Cookie {
+	return wc.cookies.store
+}
+func (wc WebClient) HasCookies() bool {
+	return len(wc.cookies.store) != 0
 }
